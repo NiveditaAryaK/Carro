@@ -45,7 +45,7 @@ export default function PersonaScreen() {
           </View>
         ))}
       </View>
-      <PrimaryButton height={56} href="/">
+      <PrimaryButton height={56} href="/rescue">
         Save persona
       </PrimaryButton>
     </PhoneScreen>

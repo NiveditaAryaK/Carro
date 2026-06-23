@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Persona } from '../store/use-fbe-store';
+import { Craving, Persona } from '../store/use-fbe-store';
 
 export function PhoneScreen({ children }: { children: React.ReactNode }) {
   return (
@@ -157,6 +157,42 @@ export function PersonaCard({
   );
 }
 
+export function Pill({
+  label,
+  selected,
+  width,
+  onPress,
+}: {
+  label: Craving;
+  selected: boolean;
+  width: number;
+  onPress: (label: Craving) => void;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={() => onPress(label)}
+      style={({ pressed }) => [
+        styles.pill,
+        { width },
+        selected ? styles.pillSelected : styles.pillDefault,
+        pressed && styles.pressed,
+      ]}>
+      <Text style={[styles.pillText, selected && styles.pillTextSelected]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+export function CravingMonster() {
+  return (
+    <View style={styles.monster}>
+      <View style={[styles.monsterEye, styles.monsterEyeLeft]} />
+      <View style={[styles.monsterEye, styles.monsterEyeRight]} />
+      <View style={styles.monsterMouth} />
+    </View>
+  );
+}
+
 export function BottomNav({ active = 'Buddy' }: { active?: 'Buddy' | 'Rescue' | 'Quest' | 'Me' }) {
   const items = ['Buddy', 'Rescue', 'Quest', 'Me'] as const;
   return (
@@ -304,6 +340,59 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 9,
     backgroundColor: colors.primary,
+  },
+  pill: {
+    height: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 21,
+  },
+  pillDefault: {
+    backgroundColor: colors.white,
+  },
+  pillSelected: {
+    backgroundColor: colors.primary,
+  },
+  pillText: {
+    color: colors.ink,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  pillTextSelected: {
+    color: colors.white,
+    fontWeight: '600',
+  },
+  monster: {
+    position: 'absolute',
+    top: 182,
+    right: 31,
+    width: 92,
+    height: 92,
+    borderRadius: 32,
+    backgroundColor: '#f4dede',
+  },
+  monsterEye: {
+    position: 'absolute',
+    top: 34,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#2f4741',
+  },
+  monsterEyeLeft: {
+    left: 25,
+  },
+  monsterEyeRight: {
+    right: 27,
+  },
+  monsterMouth: {
+    position: 'absolute',
+    top: 64,
+    left: 31,
+    width: 30,
+    height: 5,
+    borderRadius: 5,
+    backgroundColor: '#2f4741',
   },
   bottomNav: {
     position: 'absolute',
