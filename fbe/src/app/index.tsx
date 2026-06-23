@@ -21,7 +21,7 @@ export default function CompanionHomeScreen() {
       <HeroText title="Your buddy is awake" subtitle="Carro has your back today." />
       <CarroAvatar source={bestie} width={114} height={187} />
       <ChatBubble>I know the snack thoughts are loud. Want to beat one urge together?</ChatBubble>
-      <PrimaryButton>Start rescue quest</PrimaryButton>
+      <PrimaryButton href="/persona">Start rescue quest</PrimaryButton>
       <View style={{ marginTop: 32 }}>
         <InfoCard title="Today’s quest" subtitle="Pause once before a craving choice." />
         <View style={{ height: 24 }} />

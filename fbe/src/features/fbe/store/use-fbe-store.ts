@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type Persona = 'gentle' | 'coach' | 'bestie' | 'sister';
+export type Persona = 'gentle' | 'coach' | 'bestie' | 'sister';
 
 type FbeState = {
   calmPoints: number;

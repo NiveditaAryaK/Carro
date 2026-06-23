@@ -3,6 +3,8 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Persona } from '../store/use-fbe-store';
+
 export function PhoneScreen({ children }: { children: React.ReactNode }) {
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -11,10 +13,18 @@ export function PhoneScreen({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function HeroText({ title, subtitle }: { title: string; subtitle: string }) {
+export function HeroText({
+  title,
+  subtitle,
+  size = 'default',
+}: {
+  title: string;
+  subtitle: string;
+  size?: 'default' | 'large';
+}) {
   return (
     <View style={styles.hero}>
-      <Text style={styles.heroTitle}>{title}</Text>
+      <Text style={[styles.heroTitle, size === 'large' && styles.heroTitleLarge]}>{title}</Text>
       <Text style={styles.heroSubtitle}>{subtitle}</Text>
     </View>
   );
@@ -24,14 +34,16 @@ export function CarroAvatar({
   source,
   width,
   height,
+  halo = { width: 88, height: 10, left: 31, bottom: 16 },
 }: {
   source: ImageSource;
   width: number;
   height: number;
+  halo?: { width: number; height: number; left: number; bottom: number };
 }) {
   return (
     <View style={[styles.avatarWrap, { width, height }]}>
-      <View style={styles.avatarHalo} />
+      <View style={[styles.avatarHalo, halo]} />
       <Image source={source} style={[styles.avatarImage, { width, height }]} contentFit="contain" />
     </View>
   );
@@ -45,12 +57,20 @@ export function ChatBubble({ children }: { children: string }) {
   );
 }
 
-export function PrimaryButton({ children, href }: { children: string; href?: string }) {
+export function PrimaryButton({
+  children,
+  href,
+  height = 58,
+}: {
+  children: string;
+  href?: string;
+  height?: number;
+}) {
   return (
     <Pressable
       accessibilityRole="button"
       onPress={() => href && router.push(href)}
-      style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}>
+      style={({ pressed }) => [styles.primaryButton, { height }, pressed && styles.pressed]}>
       <Text style={styles.primaryButtonText}>{children}</Text>
     </Pressable>
   );
@@ -61,20 +81,79 @@ export function InfoCard({
   subtitle,
   accent = '#dde7e1',
   compact = false,
+  selected = false,
+  onPress,
 }: {
   title: string;
   subtitle: string;
   accent?: string;
   compact?: boolean;
+  selected?: boolean;
+  onPress?: () => void;
 }) {
-  return (
-    <View style={[styles.infoCard, compact ? styles.infoCardCompact : styles.infoCardDefault]}>
+  const body = (
+    <>
       <View style={[styles.cardAccent, { backgroundColor: accent }]} />
       <View style={styles.cardContent}>
         <Text style={styles.cardTitle}>{title}</Text>
         <Text style={styles.cardSubtitle}>{subtitle}</Text>
       </View>
+      {selected && <View style={styles.cardSelectedDot} />}
+    </>
+  );
+
+  if (onPress) {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        onPress={onPress}
+        style={({ pressed }) => [
+          styles.infoCard,
+          compact ? styles.infoCardCompact : styles.infoCardDefault,
+          selected && styles.infoCardSelected,
+          pressed && styles.pressed,
+        ]}>
+        {body}
+      </Pressable>
+    );
+  }
+
+  return (
+    <View
+      style={[
+        styles.infoCard,
+        compact ? styles.infoCardCompact : styles.infoCardDefault,
+        selected && styles.infoCardSelected,
+      ]}>
+      {body}
     </View>
+  );
+}
+
+export function PersonaCard({
+  id,
+  title,
+  subtitle,
+  accent,
+  selected,
+  onSelect,
+}: {
+  id: Persona;
+  title: string;
+  subtitle: string;
+  accent: string;
+  selected: boolean;
+  onSelect: (persona: Persona) => void;
+}) {
+  return (
+    <InfoCard
+      compact
+      title={title}
+      subtitle={subtitle}
+      accent={accent}
+      selected={selected}
+      onPress={() => onSelect(id)}
+    />
   );
 }
 
@@ -126,6 +205,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     lineHeight: 31,
   },
+  heroTitleLarge: {
+    fontSize: 30,
+    lineHeight: 36,
+  },
   heroSubtitle: {
     marginTop: 7,
     color: colors.muted,
@@ -142,10 +225,6 @@ const styles = StyleSheet.create({
   },
   avatarHalo: {
     position: 'absolute',
-    bottom: 16,
-    left: 31,
-    width: 88,
-    height: 10,
     borderRadius: 999,
     backgroundColor: colors.tan,
     zIndex: 0,
@@ -184,6 +263,10 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: colors.white,
   },
+  infoCardSelected: {
+    borderWidth: 1,
+    borderColor: colors.primary,
+  },
   infoCardDefault: {
     height: 88,
   },
@@ -212,6 +295,15 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontSize: 13,
     lineHeight: 19,
+  },
+  cardSelectedDot: {
+    position: 'absolute',
+    top: 27,
+    right: 22,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: colors.primary,
   },
   bottomNav: {
     position: 'absolute',
