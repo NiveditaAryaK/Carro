@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { View } from 'react-native';
 
-import { personaOptions } from '@/features/fbe/personas';
+import { getPersonaOption, personaOptions } from '@/features/fbe/personas';
 import {
   CarroAvatar,
   HeroText,
@@ -14,7 +14,7 @@ import { useFbeStore } from '@/features/fbe/store/use-fbe-store';
 export default function PersonaScreen() {
   const persona = useFbeStore((state) => state.persona);
   const setPersona = useFbeStore((state) => state.setPersona);
-  const selectedPersona = personaOptions.find((option) => option.id === persona) ?? personaOptions[2];
+  const selectedPersona = getPersonaOption(persona);
 
   return (
     <PhoneScreen>

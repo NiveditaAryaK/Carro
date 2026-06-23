@@ -10,9 +10,8 @@ import {
   Pill,
   PrimaryButton,
 } from '@/features/fbe/components/ui';
+import { getPersonaOption } from '@/features/fbe/personas';
 import { useFbeStore } from '@/features/fbe/store/use-fbe-store';
-
-const coach = require('@/assets/carro/carro_coach.png');
 
 const cravings = [
   { label: 'Sweet', width: 94 },
@@ -23,14 +22,16 @@ const cravings = [
 
 export default function RescueScreen() {
   const craving = useFbeStore((state) => state.craving);
+  const persona = useFbeStore((state) => state.persona);
   const setCraving = useFbeStore((state) => state.setCraving);
+  const selectedPersona = getPersonaOption(persona);
 
   return (
     <PhoneScreen>
       <HeroText size="large" title="A craving monster appeared." subtitle="" />
       <View style={styles.coach}>
         <CarroAvatar
-          source={coach}
+          source={selectedPersona.image}
           width={122}
           height={154}
           halo={{ width: 95, height: 18, left: 15, bottom: 25 }}

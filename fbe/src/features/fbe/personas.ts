@@ -40,3 +40,7 @@ export const personaOptions: PersonaOption[] = [
     image: require('@/assets/carro/carro_big_sis.png'),
   },
 ];
+
+export function getPersonaOption(persona: Persona) {
+  return personaOptions.find((option) => option.id === persona) ?? personaOptions[2];
+}
